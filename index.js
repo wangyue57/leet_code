@@ -62,7 +62,6 @@ var twoSum = function (nums, target) {
     }
   }
 }
-
 // 第三版
 var twoSum = function (nums, target) {
   var i, temp
@@ -88,7 +87,6 @@ var twoSum = function (nums, target) {
  *  输出：7 -> 0 -> 8
  *  原因：342 + 465 = 807
  */
-
 var addTwoNumbers = function (l1, l2) {
   function ListNode (val) {
     this.val = val
