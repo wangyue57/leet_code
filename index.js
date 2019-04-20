@@ -204,6 +204,7 @@ var maxArea = function(height) {
 
         area = Math.max(area, temp)
     }
+    return area
 }
 
 /**
