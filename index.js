@@ -344,3 +344,136 @@ var search = function (nums, target) {
   }
   return -1
 }
+
+/**
+ * 全排列
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+function permute (nums) {
+  var len = nums.length, res = []
+
+  function run (index) {
+    if (index === len - 1) {
+      return res.push(nums.slice())
+    }
+
+    for (var i = index; i < len; i++) {
+      swap(nums, i, index)
+      run(index + 1)
+      swap(nums, i, index)
+    }
+  }
+
+  function swap (arr, i, j) {
+    var temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+  }
+
+  run(0)
+  return res
+}
+
+/**
+ * 最大子序合
+ * @param {number[]} nums
+ * @return {number}
+ */
+// 第一版
+var maxSubArray = function (nums) {
+  function getMax (arr) {
+    var temp = 0, tempList = []
+    for (var i = 0, len = arr.length; i < len; i++) {
+      temp += arr[i]
+      tempList.push(temp)
+    }
+    return Math.max(...tempList)
+  }
+
+  var res = getMax(nums)
+  for (var i = 1, len = nums.length; i < len; i++) {
+    res = Math.max(res, getMax(nums.slice(i)))
+  }
+  return res
+}
+// 第二版
+var maxSubArray = function (nums) {
+  var i, j, len = nums.length
+  var temp, res = nums[0]
+
+  for (i = 0; i < len; i++) {
+    temp = 0
+    for (j = i; j < len; j++) {
+      temp += nums[j]
+      if (temp > res) {
+        res = temp
+      }
+    }
+  }
+
+  return res
+}
+// 第三版
+var maxSubArray = function (nums) {
+  var res = nums[0], temp = 0
+  for (var i = 0, len = nums.length; i < len; i++) {
+    temp += nums[i]
+
+    if (temp > res) {
+      res = temp
+    }
+
+    if (temp < 0) {
+      temp = 0
+    }
+  }
+
+  return res
+}
+// es6写法
+var maxSubArray = function (nums) {
+  var temp = 0
+
+  return nums.reduce((res, num) => {
+    temp = temp < 0 ? num : (temp + num)
+
+    return Math.max(res, temp)
+  }, nums[0])
+}
+
+/**
+ * 螺旋矩阵
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
+var spiralOrder = function (matrix) {
+  if (matrix.length === 0) {
+    return []
+  }
+
+  var rowDir = [0, 1, 0, -1], colDir = [1, 0, -1, 0]
+  var currentRow = 0, currentCol = 0, currentDir = 0
+  var res = [], visited = matrix.map(row => row.map(() => false))
+  var rowNum = matrix.length, colNum = matrix[0].length, cellNum = rowNum * colNum
+
+  while (res.length < cellNum) {
+    res.push(matrix[currentRow][currentCol])
+    visited[currentRow][currentCol] = true
+
+    var nextRow = currentRow + rowDir[currentDir]
+    var nextCol = currentCol + colDir[currentDir]
+    if (outOfRange(nextRow, rowNum) || outOfRange(nextCol, colNum) || visited[nextRow][nextCol]) {
+      currentDir = (currentDir + 1) % 4
+    }
+
+    currentRow += rowDir[currentDir]
+    currentCol += colDir[currentDir]
+  }
+
+  function outOfRange (num, max) {
+    return num < 0 || num >= max
+  }
+
+  return res
+}
