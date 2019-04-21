@@ -511,6 +511,9 @@ var generateMatrix = function (n) {
 
 /**
  * 不同路径
+ * 一个机器人位于一个 m x n 网格的左上角。
+ * 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角。
+ * 问总共有多少条不同的路径？
  */
 var uniquePaths = function (m, n) {
   var i, j, cache = [Array(n).fill(1)]
@@ -526,4 +529,151 @@ var uniquePaths = function (m, n) {
   }
 
   return cache[m - 1][n - 1]
+}
+
+/**
+ * 爬楼梯
+ * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+ * 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+ * @param {number} n
+ * @return {number}
+ */
+// 第一版  递归 超时
+var climbStairs = function (n) {
+  if (n === 1) {
+    return 1
+  }
+
+  if (n === 2) {
+    return 2
+  }
+
+  return climbStairs(n - 1) + climbStairs(n - 2)
+}
+// 第二版
+var climbStairs2 = function (n) {
+  var cache = [1, 2]
+
+  for (var i = 2; i < n; i++) {
+    cache[i] = cache[i - 1] + cache[i - 2]
+  }
+
+  return cache[n - 1]
+}
+
+/**
+ * 全子集
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+// 第一版
+var subsets = function (nums) {
+  var res = []
+
+  function count (arr, temp, start) {
+    res.push(temp.slice())
+
+    for (var i = start; i < arr.length; i++) {
+      temp.push(nums[i])
+      count(arr, temp, i + 1)
+      temp.pop()
+    }
+  }
+
+  count(nums, [], 0)
+  return res
+}
+// 第二版
+var subsets = function (nums) {
+  var res = [[]]
+  for (var num of nums) {
+    for (var i = 1, len = res.length; i < len; i++) {
+      res.push([...res[i], num])
+    }
+    res.push([num])
+  }
+  return res
+}
+// es6 写法
+var subsets = function (nums) {
+  return nums.reduce((res, num) => {
+    for (var i = 1, len = res.length; i < len; i++) {
+      res.push([...res[i], num])
+    }
+    res.push([num])
+    return res
+  }, [[]])
+}
+// 递归方式
+var subsets = function (nums) {
+  function getsub (arr) {
+    if (arr.length === 1) {
+      return [arr]
+    }
+    return combine(arr[0], getsub(arr.slice(1)))
+  }
+
+  function combine (num, arr) {
+    var res = [[num]].concat(arr)
+    for (var i = 1, len = res.length; i < len; i++) {
+      res.push([...res[i], num])
+    }
+    return res
+  }
+
+  return getsub(nums).concat([[]])
+}
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+// 第一版
+var productExceptSelf = function (nums) {
+  var len = nums.length, res = Array(len).fill(1)
+
+  for (var i = 0; i < len; i++) {
+    for (var j = 0; j < len; j++) {
+      if (i !== j) {
+        res[j] *= nums[i]
+      }
+    }
+  }
+  return res
+}
+// 第二版
+var productExceptSelf = function (nums) {
+}
+
+/**
+ * 三数之和
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var threeSum = function (nums) {
+  nums.sort((a, b) => a - b)
+  var start, end, len = nums.length, res = []
+  for (var i = 0; i < len - 2; i++) {
+    if (nums[i] === nums[i - 1]) {
+      continue
+    }
+    start = i + 1
+    end = len - 1
+    while (start < end) {
+      if (nums[start] + nums[end] + nums[i] === 0) {
+        res.push([nums[start], nums[i], nums[end]])
+        do {
+          start++
+        } while (nums[start] === nums[start - 1])
+      }
+
+      if (nums[start] + nums[end] + nums[i] < 0) {
+        start++
+      } else {
+        end--
+      }
+    }
+  }
+
+  return res
 }
