@@ -508,3 +508,22 @@ var generateMatrix = function (n) {
 
   return res
 }
+
+/**
+ * 不同路径
+ */
+var uniquePaths = function (m, n) {
+  var i, j, cache = [Array(n).fill(1)]
+
+  for (i = 1; i < m; i++) {
+    cache[i] = [1]
+  }
+
+  for (i = 1; i < m; i++) {
+    for (j = 1; j < n; j++) {
+      cache[i][j] = cache[i - 1][j] + cache[i][j - 1]
+    }
+  }
+
+  return cache[m - 1][n - 1]
+}
