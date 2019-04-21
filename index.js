@@ -625,6 +625,7 @@ var subsets = function (nums) {
 }
 
 /**
+ * 数组除自身以外数的乘积
  * @param {number[]} nums
  * @return {number[]}
  */
@@ -642,7 +643,19 @@ var productExceptSelf = function (nums) {
   return res
 }
 // 第二版
-var productExceptSelf = function (nums) {
+var productExceptSelf = function(nums) {
+  let result = [1],
+    curr = 1
+  for (let i = 0, l = nums.length; i < l - 1; i++) {
+    result.push(nums[i] * curr)
+    curr *= nums[i]
+  }
+  curr = 1
+  for (let j = nums.length - 1; j > 0; j--) {
+    curr *= nums[j]
+    result[j - 1] *= curr
+  }
+  return result
 }
 
 /**
