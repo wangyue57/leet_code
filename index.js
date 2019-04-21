@@ -443,7 +443,7 @@ var maxSubArray = function (nums) {
 }
 
 /**
- * 螺旋矩阵
+ * 摊平螺旋矩阵
  * @param {number[][]} matrix
  * @return {number[]}
  */
@@ -473,6 +473,37 @@ var spiralOrder = function (matrix) {
 
   function outOfRange (num, max) {
     return num < 0 || num >= max
+  }
+
+  return res
+}
+
+/**
+ * 生成螺旋矩阵
+ * @param {number} n
+ * @return {number[][]}
+ */
+var generateMatrix = function (n) {
+  var res = Array(n).fill(0).map(() => [])
+  var i = 0, cellNum = n * n
+  var rowIndex = 0, colIndex = 0, dir = 0
+  var rowDir = [0, 1, 0, -1], colDir = [1, 0, -1, 0]
+
+  while (i++ < cellNum) {
+    res[rowIndex][colIndex] = i
+
+    var nextRow = rowIndex + rowDir[dir]
+    var nextCol = colIndex + colDir[dir]
+    if (outOfRange(nextRow) || outOfRange(nextCol) || res[nextRow][nextCol]) {
+      dir = (dir + 1) % 4
+    }
+
+    rowIndex += rowDir[dir]
+    colIndex += colDir[dir]
+  }
+
+  function outOfRange (num) {
+    return num < 0 || num >= n
   }
 
   return res
