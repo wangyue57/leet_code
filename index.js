@@ -1,29 +1,29 @@
 /**
  * list <-> array
  */
-function ListNode(val, next = null) {
-    this.val = val
-    this.next = next
+function ListNode (val, next = null) {
+  this.val = val
+  this.next = next
 }
 
-function listToArr(list) {
-    var res = []
-    do {
-        res.push(list.val)
-        list = list.next
-    } while (list)
+function listToArr (list) {
+  var res = []
+  do {
+    res.push(list.val)
+    list = list.next
+  } while (list)
 
-    return res
+  return res
 }
 
-function arrToList(arr) {
-    var node = null
+function arrToList (arr) {
+  var node = null
 
-    for (var i = arr.length - 1; i >= 0; i--) {
-        node = new ListNode(arr[i], node)
-    }
+  for (var i = arr.length - 1; i >= 0; i--) {
+    node = new ListNode(arr[i], node)
+  }
 
-    return node
+  return node
 }
 
 /**
@@ -35,47 +35,47 @@ function arrToList(arr) {
  *  所以返回 [0, 1]
  */
 // 第一版
-var twoSum = function(nums, target) {
-    for (var i = 0, len = nums.length; i < len - 1; i++) {
-        for (var j = i + 1; j < len; j++) {
-            if (nums[i] + nums[j] === target) {
-                return [i, j]
-            }
-        }
+var twoSum = function (nums, target) {
+  for (var i = 0, len = nums.length; i < len - 1; i++) {
+    for (var j = i + 1; j < len; j++) {
+      if (nums[i] + nums[j] === target) {
+        return [i, j]
+      }
     }
+  }
 }
 // 第二版
-var twoSum = function(nums, target) {
-    var i, temp
-    var cache = {}
-    var len = nums.length
+var twoSum = function (nums, target) {
+  var i, temp
+  var cache = {}
+  var len = nums.length
 
-    for (i = 0; i < len; i++) {
-        cache[nums[i]] = i
+  for (i = 0; i < len; i++) {
+    cache[nums[i]] = i
+  }
+
+  for (i = 0; i < len; i++) {
+    temp = cache[target - nums[i]]
+
+    if (temp && temp !== i) {
+      return [i, temp]
     }
-
-    for (i = 0; i < len; i++) {
-        temp = cache[target - nums[i]]
-
-        if (temp && temp !== i) {
-            return [i, temp]
-        }
-    }
+  }
 }
 // 第三版
-var twoSum = function(nums, target) {
-    var i, temp
-    var cache = {}
-    var len = nums.length
+var twoSum = function (nums, target) {
+  var i, temp
+  var cache = {}
+  var len = nums.length
 
-    for (i = 0; i < len; i++) {
-        temp = cache[target - nums[i]]
-        if (temp !== undefined) {
-            return [temp, i]
-        }
-
-        cache[nums[i]] = i
+  for (i = 0; i < len; i++) {
+    temp = cache[target - nums[i]]
+    if (temp !== undefined) {
+      return [temp, i]
     }
+
+    cache[nums[i]] = i
+  }
 }
 
 /**
@@ -87,36 +87,36 @@ var twoSum = function(nums, target) {
  *  输出：7 -> 0 -> 8
  *  原因：342 + 465 = 807
  */
-var addTwoNumbers = function(l1, l2) {
-    function ListNode(val) {
-        this.val = val
-        this.next = null
+var addTwoNumbers = function (l1, l2) {
+  function ListNode (val) {
+    this.val = val
+    this.next = null
+  }
+
+  function foo (num1, num2, extra) {
+    var sum = num1 + num2 + !!extra
+    var exceed = sum >= 10
+
+    return [exceed, exceed ? sum - 10 : sum]
+  }
+
+  var res, last, temp
+  do {
+    var [exceed, sum] = foo(l1 && l1.val, l2 && l2.val, exceed)
+    temp = new ListNode(sum)
+
+    if (!res) {
+      res = last = temp
+    } else {
+      last.next = temp
+      last = temp
     }
 
-    function foo(num1, num2, extra) {
-        var sum = num1 + num2 + !!extra
-        var exceed = sum >= 10
+    l1 = l1 && l1.next
+    l2 = l2 && l2.next
+  } while (l1 || l2 || exceed)
 
-        return [exceed, exceed ? sum - 10 : sum]
-    }
-
-    var res, last, temp
-    do {
-        var [exceed, sum] = foo(l1 && l1.val, l2 && l2.val, exceed)
-        temp = new ListNode(sum)
-
-        if (!res) {
-            res = last = temp
-        } else {
-            last.next = temp
-            last = temp
-        }
-
-        l1 = l1 && l1.next
-        l2 = l2 && l2.next
-    } while (l1 || l2 || exceed)
-
-    return res
+  return res
 }
 
 /**
@@ -137,44 +137,44 @@ var addTwoNumbers = function(l1, l2) {
  * 假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231,  231 − 1]。
  * 请根据这个假设，如果反转后整数溢出那么就返回 0。
  */
-var reverse = function(x) {
-    var negtive = x < 0
-    if (negtive) {
-        x = -x
-    }
+var reverse = function (x) {
+  var negtive = x < 0
+  if (negtive) {
+    x = -x
+  }
 
-    let res = 0
-    while (x >= 10) {
-        res = res * 10 + (x % 10)
-        x = Math.floor(x / 10)
-    }
+  let res = 0
+  while (x >= 10) {
     res = res * 10 + (x % 10)
-    num = negtive ? -res : res
+    x = Math.floor(x / 10)
+  }
+  res = res * 10 + (x % 10)
+  num = negtive ? -res : res
 
-    if (num < -2147483648 || num > 2147483647) {
-        return 0
-    }
+  if (num < -2147483648 || num > 2147483647) {
+    return 0
+  }
 
-    return num
+  return num
 }
 
 /**
  * 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
  */
-var isPalindrome = function(x) {
-    if (x < 0) {
-        return false
-    }
-    let res = 0,
-        temp = x
-    while (temp >= 10) {
-        res = res * 10 + (temp % 10)
-        temp = Math.floor(temp / 10)
-    }
-    res = res * 10 + temp
+var isPalindrome = function (x) {
+  if (x < 0) {
+    return false
+  }
+  let res = 0,
+    temp = x
+  while (temp >= 10) {
+    res = res * 10 + (temp % 10)
+    temp = Math.floor(temp / 10)
+  }
+  res = res * 10 + temp
 
-    return res === x
-};
+  return res === x
+}
 
 /**
  * 给定 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。
@@ -183,28 +183,28 @@ var isPalindrome = function(x) {
  *
  * 说明：你不能倾斜容器，且 n 的值至少为 2。
  */
-var maxArea = function(height) {
-    var len = height.length,
-        left = 0,
-        right = len - 1
-    var area = 0,
-        temp, leftHeight, rightHeight
+var maxArea = function (height) {
+  var len = height.length,
+    left = 0,
+    right = len - 1
+  var area = 0,
+    temp, leftHeight, rightHeight
 
-    while (left < right) {
-        leftHeight = height[left]
-        rightHeight = height[right]
+  while (left < right) {
+    leftHeight = height[left]
+    rightHeight = height[right]
 
-        if (leftHeight > rightHeight) {
-            temp = rightHeight * (right - left)
-            right--
-        } else {
-            temp = leftHeight * (right - left)
-            left++
-        }
-
-        area = Math.max(area, temp)
+    if (leftHeight > rightHeight) {
+      temp = rightHeight * (right - left)
+      right--
+    } else {
+      temp = leftHeight * (right - left)
+      left++
     }
-    return area
+
+    area = Math.max(area, temp)
+  }
+  return area
 }
 
 /**
@@ -213,56 +213,56 @@ var maxArea = function(height) {
  * 如果不存在公共前缀，返回空字符串 ""。
  */
 // 第一版
-var longestCommonPrefix = function(strs) {
-    var res = '',
-        i = 0,
-        len = strs.length,
-        temp
-    if (len === 0) {
+var longestCommonPrefix = function (strs) {
+  var res = '',
+    i = 0,
+    len = strs.length,
+    temp
+  if (len === 0) {
+    return res
+  }
+
+  while (temp = strs[0][i]) {
+    for (var j = 1; j < len; j++) {
+      if (strs[j][i] !== temp) {
         return res
+      }
     }
-
-    while (temp = strs[0][i]) {
-        for (var j = 1; j < len; j++) {
-            if (strs[j][i] !== temp) {
-                return res
-            }
-        }
-        res += temp
-        i++
-    }
-    return res
-};
+    res += temp
+    i++
+  }
+  return res
+}
 // 第二版
-var longestCommonPrefix = function(strs) {
-    var res = strs[0]
+var longestCommonPrefix = function (strs) {
+  var res = strs[0]
+  if (!res) {
+    return ''
+  }
+  for (var i = 1, len = strs.length; i < len; i++) {
+    res = getCommon(res, strs[i])
     if (!res) {
-        return ''
+      return res
     }
-    for (var i = 1, len = strs.length; i < len; i++) {
-        res = getCommon(res, strs[i])
-        if (!res) {
-            return res
-        }
-    }
-    return res
+  }
+  return res
 
-    function getCommon(str1, str2) {
-        var temp = '',
-            i = 0,
-            len1 = str1.length,
-            len2 = str2.length
+  function getCommon (str1, str2) {
+    var temp = '',
+      i = 0,
+      len1 = str1.length,
+      len2 = str2.length
 
-        while (i < len1 && i < len2) {
-            if (str1[i] === str2[i]) {
-                temp += str1[i]
-            } else {
-                return temp
-            }
-            i++
-        }
+    while (i < len1 && i < len2) {
+      if (str1[i] === str2[i]) {
+        temp += str1[i]
+      } else {
         return temp
+      }
+      i++
     }
+    return temp
+  }
 }
 
 /**
@@ -274,46 +274,46 @@ var longestCommonPrefix = function(strs) {
  * 左括号必须以正确的顺序闭合。
  * 注意空字符串可被认为是有效字符串。
  */
-var isValid = function(s) {
-    var stack = [],
-        map = {
-            '(': ')',
-            '[': ']',
-            '{': '}'
-        };
-
-    for (var item of s) {
-        if (item in map) {
-            stack.push(item)
-            continue
-        }
-        if (item !== map[stack.pop()]) {
-            return false
-        }
+var isValid = function (s) {
+  var stack = [],
+    map = {
+      '(': ')',
+      '[': ']',
+      '{': '}'
     }
 
-    return stack.length === 0
-};
+  for (var item of s) {
+    if (item in map) {
+      stack.push(item)
+      continue
+    }
+    if (item !== map[stack.pop()]) {
+      return false
+    }
+  }
+
+  return stack.length === 0
+}
 
 /**
  * 给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
  * 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
  */
-var removeDuplicates = function(nums) {
-    var cache = {}
+var removeDuplicates = function (nums) {
+  var cache = {}
 
-    for (var i = 0; i < nums.length; i++) {
-        var num = nums[i]
+  for (var i = 0; i < nums.length; i++) {
+    var num = nums[i]
 
-        if (cache[num]) {
-            nums.splice(i--, 1)
-        } else {
-            cache[num] = 1
-        }
+    if (cache[num]) {
+      nums.splice(i--, 1)
+    } else {
+      cache[num] = 1
     }
+  }
 
-    return nums.length
-};
+  return nums.length
+}
 
 /**
  * 设按照升序排序的数组在预先未知的某个点上进行了旋转。
@@ -321,26 +321,26 @@ var removeDuplicates = function(nums) {
  * 搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
  * 你可以假设数组中不存在重复的元素。
  */
-var search = function(nums, target) {
-    var i, len = nums.length
-    if (target < nums[0]) {
-        for (i = len - 1; i >= 0; i--) {
-            if (target === nums[i]) {
-                return i
-            }
-            if (target > nums[i] || nums[i] < nums[i - 1]) {
-                return -1
-            }
-        }
-    } else {
-        for (i = 0; i < len; i++) {
-            if (target === nums[i]) {
-                return i
-            }
-            if (target < nums[i] || nums[i] > nums[i + 1]) {
-                return -1
-            }
-        }
+var search = function (nums, target) {
+  var i, len = nums.length
+  if (target < nums[0]) {
+    for (i = len - 1; i >= 0; i--) {
+      if (target === nums[i]) {
+        return i
+      }
+      if (target > nums[i] || nums[i] < nums[i - 1]) {
+        return -1
+      }
     }
-    return -1
-};
+  } else {
+    for (i = 0; i < len; i++) {
+      if (target === nums[i]) {
+        return i
+      }
+      if (target < nums[i] || nums[i] > nums[i + 1]) {
+        return -1
+      }
+    }
+  }
+  return -1
+}
