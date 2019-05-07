@@ -643,7 +643,7 @@ var productExceptSelf = function (nums) {
   return res
 }
 // 第二版
-var productExceptSelf = function(nums) {
+var productExceptSelf = function (nums) {
   let result = [1],
     curr = 1
   for (let i = 0, l = nums.length; i < l - 1; i++) {
@@ -685,6 +685,92 @@ var threeSum = function (nums) {
       } else {
         end--
       }
+    }
+  }
+
+  return res
+}
+
+/**
+ * 给定一个二维平面，平面上有 n 个点，求最多有多少个点在同一条直线上。
+ * @param points
+ * @returns {number|*}
+ */
+var maxPoints = function (points) {
+  function genLineFn ([x1, y1], [x2, y2]) {
+    return function ([x, y]) {
+      if (x1 === x2 && x === x1) {
+        return true
+      }
+
+      if (y1 === y2 && y === y1) {
+        return true
+      }
+
+      return (x - x1) * (y2 - y1) === (y - y1) * (x2 - x1)
+    }
+  }
+
+  var i, j, len = points.length, lineFn, maxPoints = 0
+  if (len < 3) {
+    return len
+  }
+
+  for (i = 0; i < len - 1; i++) {
+    for (j = i + 1; j < len; j++) {
+      lineFn = genLineFn(points[i], points[j])
+      maxPoints = Math.max(maxPoints, points.filter(point => lineFn(point)).length)
+    }
+  }
+
+  return maxPoints
+}
+
+/**
+ * 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function (s) {
+  var res = 0, temp = 0, cache = []
+  for (var char of s) {
+    if (cache.includes(char)) {
+      temp > res && (res = temp)
+      cache = cache.slice(cache.indexOf(char) + 1)
+      cache.push(char)
+      temp = cache.length
+    } else {
+      temp += 1
+      cache.push(char)
+    }
+  }
+
+  return temp > res ? temp : res
+}
+
+/**
+ * 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+ * @param s
+ * @returns {string}
+ */
+var longestPalindrome = function (s) {
+  var temp, res = '', len = s.length
+
+  function findPdr (index) {
+    var step = index === parseInt(index) ? 1 : 0.5
+    var i = index - step, j = index + step
+    while (s[i] === s[j] && i >= 0 && j < len) {
+      i--
+      j++
+    }
+
+    return s.slice(i + 1, j)
+  }
+
+  for (var i = 0; i < len; i += 0.5) {
+    temp = findPdr(i)
+    if (temp.length > res.length) {
+      res = temp
     }
   }
 
