@@ -866,24 +866,6 @@ var searchRange = function (nums, target) {
  数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
  */
 var isValidSudoku = function (board) {
-  function getRectNum (i, j) {
-    if (i < 3) {
-      if (j < 3) return 0
-      if (j < 6) return 1
-      return 2
-    }
-
-    if (i < 6) {
-      if (j < 3) return 3
-      if (j < 6) return 4
-      return 5
-    }
-
-    if (j < 3) return 6
-    if (j < 6) return 7
-    return 8
-  }
-
   var rowCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
   var colCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
   var rectCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
@@ -895,7 +877,7 @@ var isValidSudoku = function (board) {
         continue
       }
 
-      var n = Math.floor((i / 3)) * 3 + Math.floor(j / 3);
+      var n = Math.floor((i / 3)) * 3 + Math.floor(j / 3)
       if (rowCache[i][char] || colCache[j][char] || rectCache[n][char]) {
         return false
       }
@@ -907,4 +889,54 @@ var isValidSudoku = function (board) {
   }
 
   return true
+}
+
+/**
+ * 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+ * candidates 中的数字可以无限制重复被选取。
+ * @param candidates
+ * @param target
+ */
+// edition 1 递归
+var combinationSum = function (candidates, target) {
+  var res = []
+  for (var i = 0, len = candidates.length; i < len; i++) {
+    var num = candidates[i]
+    if (num === target) {
+      res.push([num])
+    }
+
+    if (num < target) {
+      res.push(...combinationSum(candidates.slice(i), target - num).map(item => [num, ...item]))
+    }
+  }
+
+  return res
+}
+// edition 2 回溯：深度优先搜索
+var combinationSum2 = function (candidates, target) {
+  var res = [], len = candidates.length
+
+  function dfs (index, sum, combination) {
+    if (sum === target) {
+      res.push(combination)
+    }
+
+    for (var i = index; i < len; i++) {
+      var num = candidates[i]
+
+      if (num + sum <= target) {
+        sum += num
+        combination.push(num)
+
+        dfs(i, sum, combination.slice())
+
+        sum -= num
+        combination.pop()
+      }
+    }
+  }
+
+  dfs(0, 0, [])
+  return res
 }
