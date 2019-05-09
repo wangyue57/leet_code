@@ -776,3 +776,84 @@ var longestPalindrome = function (s) {
 
   return res
 }
+
+/**
+ * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+ * @param {string} digits
+ * @return {string[]}
+ */
+var letterCombinations = function (digits) {
+  if (digits.length === 0) {
+    return []
+  }
+
+  var map = {
+    2: ['a', 'b', 'c'],
+    3: ['d', 'e', 'f'],
+    4: ['g', 'h', 'i'],
+    5: ['j', 'k', 'l'],
+    6: ['m', 'n', 'o'],
+    7: ['p', 'q', 'r', 's'],
+    8: ['t', 'u', 'v'],
+    9: ['w', 'x', 'y', 'z']
+  }
+
+  function combine (arr1, arr2) {
+    var res = []
+    for (var str of arr1) {
+      for (var char of arr2) {
+        res.push(str + char)
+      }
+    }
+
+    return res
+  }
+
+  var res = ['']
+  for (var dig of digits) {
+    res = combine(res, map[dig])
+  }
+
+  return res
+}
+
+/**
+ * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var searchRange = function (nums, target) {
+  function find (start, end) {
+    var mid = Math.floor((start + end) / 2)
+    var temp = nums[mid]
+    if (start >= end) {
+      return temp === target ? mid : -1
+    }
+
+    if (temp === target) {
+      return mid
+    }
+
+    if (temp < target) {
+      return find(mid + 1, end)
+    }
+
+    if (temp > target) {
+      return find(start, mid - 1)
+    }
+  }
+
+  var index = find(0, nums.length - 1)
+  if (index === -1) {
+    return [-1, -1]
+  }
+  var left = index, right = index
+  while (nums[left - 1] === target) {
+    left--
+  }
+  while (nums[right + 1] === target) {
+    right++
+  }
+  return [left, right]
+}
