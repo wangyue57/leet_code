@@ -857,3 +857,54 @@ var searchRange = function (nums, target) {
   }
   return [left, right]
 }
+
+/**
+ * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+
+ 数字 1-9 在每一行只能出现一次。
+ 数字 1-9 在每一列只能出现一次。
+ 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+ */
+var isValidSudoku = function (board) {
+  function getRectNum (i, j) {
+    if (i < 3) {
+      if (j < 3) return 0
+      if (j < 6) return 1
+      return 2
+    }
+
+    if (i < 6) {
+      if (j < 3) return 3
+      if (j < 6) return 4
+      return 5
+    }
+
+    if (j < 3) return 6
+    if (j < 6) return 7
+    return 8
+  }
+
+  var rowCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
+  var colCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
+  var rectCache = [{}, {}, {}, {}, {}, {}, {}, {}, {}]
+  for (var i = 0; i < 9; i++) {
+    for (var j = 0; j < 9; j++) {
+      var char = board[i][j]
+
+      if (char === '.') {
+        continue
+      }
+
+      var n = Math.floor((i / 3)) * 3 + Math.floor(j / 3);
+      if (rowCache[i][char] || colCache[j][char] || rectCache[n][char]) {
+        return false
+      }
+
+      rowCache[i][char] = 1
+      colCache[j][char] = 1
+      rectCache[n][char] = 1
+    }
+  }
+
+  return true
+}
