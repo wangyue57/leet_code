@@ -940,3 +940,88 @@ var combinationSum2 = function (candidates, target) {
   dfs(0, 0, [])
   return res
 }
+
+/**
+ * 给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现了三次。找出那个只出现了一次的元素。
+ * @param {number[]} nums
+ * @return {number}
+ */
+var singleNumber = function (nums) {
+  var a = 0, b = 0
+  for (var num of nums) {
+    b = (b ^ num) & ~a
+    a = (a ^ num) & ~b
+  }
+
+  return b
+}
+
+/**
+ * 在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+
+ 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+
+ 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+
+ 说明:
+
+ 如果题目有解，该答案即为唯一答案。
+ 输入数组均为非空数组，且长度相同。
+ 输入数组中的元素均为非负数。
+ * @param gas
+ * @param cost
+ * @returns {number}
+ */
+var canCompleteCircuit = function (gas, cost) {
+  var N = gas.length
+
+  function foo (start) {
+    var current = gas[start]
+
+    for (var i = 1; i < N; i++) {
+      current -= cost[(start + i - 1) % N]
+      if (current < 0) return false
+      current += gas[(i + start) % N]
+    }
+
+    return current >= cost[(start + N - 1) % N]
+  }
+
+  for (var i = 0; i < N; i++) {
+    if (foo(i)) return i
+  }
+
+  return -1
+}
+
+/**
+ * 比较两个版本号 version1 和 version2。
+ 如果 version1 > version2 返回 1，如果 version1 < version2 返回 -1， 除此之外返回 0。
+
+ 你可以假设版本字符串非空，并且只包含数字和 . 字符。
+
+ . 字符不代表小数点，而是用于分隔数字序列。
+
+ 例如，2.5 不是“两个半”，也不是“差一半到三”，而是第二版中的第五个小版本。
+
+ 你可以假设版本号的每一级的默认修订版号为 0。例如，版本号 3.4 的第一级（大版本）和第二级（小版本）修订号分别为 3 和 4。其第三级和第四级修订号均为 0。
+ * @param version1
+ * @param version2
+ * @returns {number}
+ */
+var compareVersion = function (version1, version2) {
+  version1 = version1.split('.')
+  version2 = version2.split('.')
+
+  var num1, num2, i = 0, len1 = version1.length, len2 = version2.length
+  while (i < len1 || i < len2) {
+    num1 = i < len1 ? +version1[i] : 0
+    num2 = i < len2 ? +version2[i] : 0
+
+    if (num1 > num2) return 1
+    if (num1 < num2) return -1
+    i++
+  }
+
+  return 0
+}
